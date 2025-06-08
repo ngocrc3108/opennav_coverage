@@ -119,29 +119,29 @@ Visualization Manager:
       Show Names: false
       Tree:
         EPSG:4258:
-          map:
-            odom:
-              base_footprint:
-                base_link:
-                  base_scan:
-                    {}
-                  camera_link:
-                    camera_depth_frame:
-                      camera_depth_optical_frame:
-                        {}
-                    camera_rgb_frame:
-                      camera_rgb_optical_frame:
-                        {}
-                  caster_back_left_link:
-                    {}
-                  caster_back_right_link:
-                    {}
-                  imu_link:
-                    {}
-                  wheel_left_link:
-                    {}
-                  wheel_right_link:
-                    {}
+        map:
+          odom:
+            base_footprint:
+              base_link:
+                base_scan:
+                  {}
+                camera_link:
+                  camera_depth_frame:
+                    camera_depth_optical_frame:
+                      {}
+                  camera_rgb_frame:
+                    camera_rgb_optical_frame:
+                      {}
+                caster_back_left_link:
+                  {}
+                caster_back_right_link:
+                  {}
+                imu_link:
+                  {}
+                wheel_left_link:
+                  {}
+                wheel_right_link:
+                  {}
       Update Interval: 0
       Value: true
     - Alpha: 1
@@ -577,8 +577,8 @@ Visualization Manager:
       Class: rviz_default_plugins/Path
       Color: 255; 85; 255
       Enabled: true
-      Head Diameter: 0.30000001192092896
-      Head Length: 0.20000000298023224
+      Head Diameter: 0.019999999552965164
+      Head Length: 0.019999999552965164
       Length: 0.30000001192092896
       Line Style: Lines
       Line Width: 0.07999999821186066
@@ -587,11 +587,11 @@ Visualization Manager:
         X: 0
         Y: 0
         Z: 0
-      Pose Color: 255; 85; 255
-      Pose Style: None
+      Pose Color: 51; 209; 122
+      Pose Style: Arrows
       Radius: 0.029999999329447746
-      Shaft Diameter: 0.10000000149011612
-      Shaft Length: 0.10000000149011612
+      Shaft Diameter: 0.014999999664723873
+      Shaft Length: 0.014999999664723873
       Topic:
         Depth: 5
         Durability Policy: Volatile
