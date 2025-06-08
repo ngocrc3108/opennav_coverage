@@ -228,13 +228,12 @@ inline nav_msgs::msg::Path toNavPathMsg(
 
   for (unsigned int i = 0; i != path.size(); i++) {
     // Swaths come in pairs of start-end sequentially
-    if (i > 0 && path.getState(i).type == PathSectionType::SWATH &&
-      path.getState(i - 1).type == PathSectionType::SWATH)
+    if (path.getState(i).type == PathSectionType::SWATH)
     {
-      const float & x0 = path.getState(i - 1).point.getX();
-      const float & y0 = path.getState(i - 1).point.getY();
-      const float & x1 = path.getState(i).point.getX();
-      const float & y1 = path.getState(i).point.getY();
+      const float & x0 = path.getState(i).point.getX();
+      const float & y0 = path.getState(i).point.getY();
+      const float & x1 = path.getState(i).atEnd().getX();
+      const float & y1 = path.getState(i).atEnd().getY();
 
       const float dist = hypotf(x1 - x0, y1 - y0);
       const float ux = (x1 - x0) / dist;
@@ -247,6 +246,7 @@ inline nav_msgs::msg::Path toNavPathMsg(
       pose.pose.position.x = x0;
       pose.pose.position.y = y0;
       pose.pose.position.z = path.getState(i).point.getZ();
+      msg.poses.push_back(pose);
 
       while (curr_dist < dist) {
         pose.pose.position.x += pt_dist * ux;
