@@ -58,7 +58,7 @@ class CoverageNavigatorTester(Node):
             poly.points.append(pt)
         return poly
 
-    def navigateCoverage(self, field):
+    def navigateCoverage(self, fields):
         """Send a `NavToPose` action request."""
         print("Waiting for 'NavigateCompleteCoverage' action server")
         while not self.coverage_client.wait_for_server(timeout_sec=1.0):
@@ -66,9 +66,10 @@ class CoverageNavigatorTester(Node):
 
         goal_msg = NavigateCompleteCoverage.Goal()
         goal_msg.frame_id = 'map'
-        goal_msg.polygons.append(self.toPolygon(field))
+        for field in fields:
+            goal_msg.polygons.append(self.toPolygon(field))
 
-        print('Navigating to with field of size: ' + str(len(field)) + '...')
+        print('Navigating to with field of size: ' + str(len(fields[0])) + '...')
         send_goal_future = self.coverage_client.send_goal_async(goal_msg,
                                                                 self._feedbackCallback)
         rclpy.spin_until_future_complete(self, send_goal_future)
@@ -145,9 +146,12 @@ def main():
     navigator = CoverageNavigatorTester()
     navigator.startup()
 
-    # Some example field
-    field = [[5.0, 5.0], [5.0, 15.0], [15.0, 15.0], [10.0, 5.0], [5.0, 5.0]]
-    navigator.navigateCoverage(field)
+    # Some example fields
+    fields = [
+        [[5.0, 5.0], [5.0, 15.0], [15.0, 15.0], [15.0, 5.0], [5.0, 5.0]],
+        [[9.0, 9.0], [9.0, 11.0], [11.0, 11.0], [11.0, 9.0], [9.0, 9.0]],
+    ]
+    navigator.navigateCoverage(fields)
 
     i = 0
     while not navigator.isTaskComplete():

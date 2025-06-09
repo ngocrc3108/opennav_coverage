@@ -206,13 +206,19 @@ void CoverageServer::computeCoveragePath()
     header.stamp = now();
     header.frame_id = frame_id;
     Path path;
+    F2CRoute route2;
     if (goal->generate_route) {
       Swaths route = route_gen_->generateRoute(swaths, goal->route_mode);
 
       // (4) Optional: Generate connection turns between ordered swaths
       // Converts UTM back to GPS, if necessary, for action returns
       if (goal->generate_path) {
-        path = path_gen_->generatePath(route, goal->path_mode);
+        f2c::rp::RoutePlannerBase route_planner;
+        // route_planner.setStartAndEndPoint(swaths.back().endPoint());
+        route2 = route_planner.genRoute(Fields(field_no_headland), F2CSwathsByCells({swaths}));
+        f2c::pp::DubinsCurves dubins;
+        f2c::pp::PathPlanning path_planner;
+        path = path_planner.planPath(robot_params_->getRobot(), route2, dubins);
         result->coverage_path =
           util::toCoveragePathMsg(path, master_field, header, cartesian_frame_);
         result->nav_path = util::toNavPathMsg(
@@ -228,6 +234,12 @@ void CoverageServer::computeCoveragePath()
 
     auto cycle_duration = this->now() - start_time;
     result->planning_time = cycle_duration;
+
+    f2c::Visualizer::figure();
+    f2c::Visualizer::plot(field_no_headland);
+    f2c::Visualizer::plot(field);
+    f2c::Visualizer::plot(path);
+    f2c::Visualizer::save("path.png");
 
     // Visualize in Cartesian coordinates for debugging
     visualizer_->visualize(

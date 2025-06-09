@@ -59,8 +59,8 @@ def generate_launch_description():
         arguments=[
             '-entity', 'tb3',
             '-file', sdf,
-            '-x', '5.0', '-y', '5.0', '-z', '0.10',
-            '-R', '0.0', '-P', '0.0', '-Y', '0.0'])
+            '-x', '15.0', '-y', '15.0', '-z', '0.10',
+            '-R', '0.0', '-P', '0.0', '-Y', '-1.57'])
 
     # start the visualization
     rviz_config = os.path.join(coverage_demo_dir, 'opennav_coverage_demo.rviz')
