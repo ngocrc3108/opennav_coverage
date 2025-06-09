@@ -226,6 +226,7 @@ inline nav_msgs::msg::Path toNavPathMsg(
     path.moveTo(field.getRefPoint());
   }
 
+  int turn_count = 0;
   for (unsigned int i = 0; i != path.size(); i++) {
     // Swaths come in pairs of start-end sequentially
     if (path.getState(i).type == PathSectionType::SWATH)
@@ -256,7 +257,11 @@ inline nav_msgs::msg::Path toNavPathMsg(
       }
     } else {
       // Turns are already dense paths
-      msg.poses.push_back(toMsg(path.getState(i)));
+      if(turn_count == 0) {
+        msg.poses.push_back(toMsg(path.getState(i)));
+      }
+      turn_count++;
+      turn_count %= 10;
     }
   }
 
