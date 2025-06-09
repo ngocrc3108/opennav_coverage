@@ -119,7 +119,7 @@ class CoverageNavigatorTester(Node):
         else:
             return TaskResult.UNKNOWN
 
-    def startup(self, node_name='bt_navigator'):
+    def startup(self, node_name='opennav_bt_navigator'):
         # Waits for the node within the tester namespace to become active
         print(f'Waiting for {node_name} to become active..')
         node_service = f'{node_name}/get_state'

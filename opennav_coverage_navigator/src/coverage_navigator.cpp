@@ -51,6 +51,37 @@ CoverageNavigator::configure(
 
   // Odometry smoother object for getting current speed
   odom_smoother_ = odom_smoother;
+
+  parent_node_ = parent_node;
+
+  costmap_ros_ = std::make_shared<nav2_costmap_2d::Costmap2DROS>("converter_costmap");
+
+  costmap_thread_ = std::make_unique<std::thread>(
+    [](rclcpp_lifecycle::LifecycleNode::SharedPtr node) {
+      rclcpp::spin(node->get_node_base_interface());
+    },
+    costmap_ros_);
+
+  rclcpp_lifecycle::State state;
+  costmap_ros_->on_configure(state);
+  costmap_ros_->on_activate(state);
+
+  try {
+    converter_ = converter_loader_.createSharedInstance("costmap_converter::CostmapToPolygonsDBSMCCH");
+  } catch (const pluginlib::PluginlibException &ex) {
+    RCLCPP_ERROR(node->get_logger(),
+                 "The plugin failed to load for some reason. Error: %s",
+                 ex.what());
+    rclcpp::shutdown();
+    return true;
+  }
+
+  if (converter_) {
+    converter_->setOdomTopic("/odom");
+    converter_->initialize(
+        std::make_shared<rclcpp::Node>("intra_node", "costmap_converter"));
+  }
+
   return true;
 }
 
@@ -84,6 +115,8 @@ CoverageNavigator::cleanup()
 bool
 CoverageNavigator::goalReceived(ActionT::Goal::ConstSharedPtr goal)
 {
+  auto node = parent_node_.lock();
+
   auto bt_xml_filename = goal->behavior_tree;
 
   if (!bt_action_server_->loadBehaviorTree(bt_xml_filename)) {
@@ -93,7 +126,22 @@ CoverageNavigator::goalReceived(ActionT::Goal::ConstSharedPtr goal)
     return false;
   }
 
-  initializeGoalPose(goal);
+  converter_->setCostmap2D(costmap_ros_->getCostmap());
+  converter_->workerCallback();
+  costmap_converter::ObstacleArrayConstPtr obstacles = converter_->getObstacles();
+  
+  RCLCPP_INFO(node->get_logger(), "Number of polygons: %d", obstacles->obstacles.size());
+
+  ActionT::Goal::SharedPtr new_goal = std::make_shared<opennav_coverage_msgs::action::NavigateCompleteCoverage_Goal>(*goal);
+
+  new_goal->polygons.clear();
+
+  for(auto obs : obstacles->obstacles)
+  {
+    new_goal->polygons.push_back(obs.polygon);
+  }
+
+  initializeGoalPose(std::make_shared<opennav_coverage_msgs::action::NavigateCompleteCoverage_Goal const>(*new_goal));
   return true;
 }
 

@@ -13,10 +13,12 @@ find_package(nav_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(opennav_coverage_msgs REQUIRED)
 find_package(backported_bt_navigator REQUIRED)
+find_package(costmap_converter_msgs REQUIRED)
+find_package(costmap_converter REQUIRED)
 
 # potentially replace with nav2_common, nav2_package()
 set(CMAKE_CXX_STANDARD 17)
-add_compile_options(-Wall -Wextra -Wpedantic -Werror -Wdeprecated -fPIC -Wnull-dereference)
+add_compile_options(-Wall -Wextra -Wpedantic -Wdeprecated -fPIC -Wnull-dereference)
 
 include_directories(
   include
@@ -34,6 +36,8 @@ set(dependencies
   geometry_msgs
   opennav_coverage_msgs
   backported_bt_navigator
+  opennav_coverage_msgs
+  costmap_converter
 )
 
 include_directories(

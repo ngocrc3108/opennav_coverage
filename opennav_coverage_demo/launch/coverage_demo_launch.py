@@ -98,5 +98,5 @@ def generate_launch_description():
     ld.add_action(rviz_cmd)
     ld.add_action(bringup_cmd)
     ld.add_action(fake_localization_cmd)
-    ld.add_action(demo_cmd)
+    # ld.add_action(demo_cmd)
     return ld

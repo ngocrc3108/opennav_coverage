@@ -22,6 +22,7 @@
 #include "opennav_coverage_msgs/action/compute_coverage_path.hpp"
 #include "nav2_behavior_tree/bt_action_node.hpp"
 #include "geometry_msgs/msg/polygon.hpp"
+#include "geometry_msgs/msg/pose_stamped.hpp"
 #include "opennav_coverage_bt/utils.hpp"
 
 namespace opennav_coverage_bt
@@ -100,6 +101,7 @@ public:
           "nav_path", "The coverage plan as a nav_msgs/Path to track directly"),
         BT::OutputPort<ActionResult::_coverage_path_type>(
           "coverage_path", "The coverage plan as an ordered set of swaths and route connections"),
+        BT::OutputPort<geometry_msgs::msg::PoseStamped>("goal", "The first pose in coverage path"),
       });
   }
 };

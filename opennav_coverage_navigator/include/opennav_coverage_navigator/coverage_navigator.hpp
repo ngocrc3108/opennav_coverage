@@ -29,6 +29,8 @@
 #include "nav_msgs/msg/path.hpp"
 #include "nav2_util/odometry_utils.hpp"
 
+#include <costmap_converter/costmap_converter_interface.h>
+
 namespace opennav_coverage_navigator
 {
 
@@ -47,7 +49,9 @@ public:
    * @brief A constructor for CoverageNavigator
    */
   CoverageNavigator()
-  : BehaviorTreeNavigator() {}
+  : BehaviorTreeNavigator(),
+    converter_loader_("costmap_converter",
+      "costmap_converter::BaseCostmapToPolygons") {}
 
   /**
    * @brief A configure state transition to configure navigator's state
@@ -120,6 +124,14 @@ protected:
 
   // Odometry smoother object
   std::shared_ptr<nav2_util::OdomSmoother> odom_smoother_;
+
+  pluginlib::ClassLoader<costmap_converter::BaseCostmapToPolygons>
+      converter_loader_;
+  std::shared_ptr<costmap_converter::BaseCostmapToPolygons> converter_;
+  std::unique_ptr<std::thread> costmap_thread_;
+  std::shared_ptr<nav2_costmap_2d::Costmap2DROS> costmap_ros_;
+
+  rclcpp_lifecycle::LifecycleNode::WeakPtr parent_node_;
 };
 
 }  // namespace opennav_coverage_navigator
