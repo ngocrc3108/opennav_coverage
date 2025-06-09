@@ -241,6 +241,12 @@ void CoverageServer::computeCoveragePath()
     f2c::Visualizer::plot(path);
     f2c::Visualizer::save("path.png");
 
+    f2c::Visualizer::figure();
+    f2c::Visualizer::plot(field_no_headland);
+    f2c::Visualizer::plot(field);
+    f2c::Visualizer::plot(swaths);
+    f2c::Visualizer::save("swaths.png");
+
     // Visualize in Cartesian coordinates for debugging
     visualizer_->visualize(
       field, field_no_headland, master_field.getRefPoint(),
