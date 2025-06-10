@@ -19,10 +19,13 @@ from launch_ros.actions import LoadComposableNodes
 from launch_ros.actions import Node
 from launch_ros.descriptions import ComposableNode, ParameterFile
 from nav2_common.launch import RewrittenYaml
+from ament_index_python.packages import get_package_share_directory
+import os
 
 
 def generate_launch_description():
     params_file = LaunchConfiguration('params_file')
+    demo_dir = get_package_share_directory('opennav_coverage_demo')
 
     lifecycle_nodes = [
                        'opennav_bt_navigator',
@@ -51,7 +54,10 @@ def generate_launch_description():
     stdout_linebuf_envvar = SetEnvironmentVariable(
         'RCUTILS_LOGGING_BUFFERED_STREAM', '1')
 
-    declare_params_file_cmd = DeclareLaunchArgument('params_file')
+    declare_params_file_cmd = DeclareLaunchArgument(
+        'params_file',
+        default_value=os.path.join(demo_dir, 'demo_params.yaml'),
+    )
 
     create_container = Node(
         name='opennav_nav2_container',
