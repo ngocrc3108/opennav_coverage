@@ -30,7 +30,7 @@ namespace backported_bt_navigator
 {
 
 BtNavigator::BtNavigator(rclcpp::NodeOptions options)
-: nav2_util::LifecycleNode("bt_navigator", "",
+: nav2_util::LifecycleNode("opennav_bt_navigator", "",
     options.automatically_declare_parameters_from_overrides(true)),
   class_loader_("backported_bt_navigator", "backported_bt_navigator::NavigatorBase")
 {
