@@ -65,6 +65,12 @@ BT::NodeStatus ComputeCoveragePathAction::on_success()
   setOutput("nav_path", result_.result->nav_path);
   setOutput("coverage_path", result_.result->coverage_path);
   setOutput("error_code_id", ActionResult::NONE);
+
+  auto goal = result_.result->nav_path.poses.front();
+  goal.header.frame_id = "map";
+
+  setOutput("goal", goal);
+
   return BT::NodeStatus::SUCCESS;
 }
 

@@ -37,6 +37,7 @@ opennav_bt_navigator:
       plugin: "opennav_coverage_navigator/CoverageNavigator"
     error_code_names: ["compute_path_error_code", "follow_path_error_code", "compute_coverage_error_code"]
     plugin_lib_names:
+      - nav2_compute_path_to_pose_action_bt_node
       - nav2_follow_path_action_bt_node
       - nav2_rate_controller_bt_node
       - nav2_recovery_node_bt_node
