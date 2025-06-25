@@ -28,6 +28,7 @@
 #include "nav2_util/robot_utils.hpp"
 #include "nav_msgs/msg/path.hpp"
 #include "nav2_util/odometry_utils.hpp"
+#include <gridmap_to_polygon/gridmap_to_polygon.h>
 
 namespace opennav_coverage_navigator
 {
@@ -120,6 +121,11 @@ protected:
 
   // Odometry smoother object
   std::shared_ptr<nav2_util::OdomSmoother> odom_smoother_;
+
+  std::unique_ptr<std::thread> converter_thread_;
+  std::shared_ptr<GridMapToPolygonConverter> gridMapConverter_;
+
+  rclcpp_lifecycle::LifecycleNode::WeakPtr parent_node_;
 };
 
 }  // namespace opennav_coverage_navigator

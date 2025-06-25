@@ -51,6 +51,22 @@ CoverageNavigator::configure(
 
   // Odometry smoother object for getting current speed
   odom_smoother_ = odom_smoother;
+
+  parent_node_ = parent_node;
+
+  auto params = node->get_node_options().parameter_overrides();
+  rclcpp::NodeOptions options;
+  options.parameter_overrides(params);
+
+  auto convertNode = std::make_shared<rclcpp::Node>("gridmap_to_polygon", options);
+
+  gridMapConverter_ = std::make_shared<GridMapToPolygonConverter>(convertNode);
+
+  converter_thread_ = std::make_unique<std::thread>(
+    [&convertNode]() {
+      rclcpp::spin(convertNode->get_node_base_interface());
+    });
+
   return true;
 }
 
@@ -84,6 +100,8 @@ CoverageNavigator::cleanup()
 bool
 CoverageNavigator::goalReceived(ActionT::Goal::ConstSharedPtr goal)
 {
+  auto node = parent_node_.lock();
+
   auto bt_xml_filename = goal->behavior_tree;
 
   if (!bt_action_server_->loadBehaviorTree(bt_xml_filename)) {
@@ -93,7 +111,13 @@ CoverageNavigator::goalReceived(ActionT::Goal::ConstSharedPtr goal)
     return false;
   }
 
-  initializeGoalPose(goal);
+  ActionT::Goal::SharedPtr new_goal = std::make_shared<opennav_coverage_msgs::action::NavigateCompleteCoverage_Goal>(*goal);
+  
+  new_goal->polygons = gridMapConverter_->getPolygons();
+
+  RCLCPP_INFO(node->get_logger(), "Number of polygons: %ld", new_goal->polygons.size());
+
+  initializeGoalPose(std::make_shared<opennav_coverage_msgs::action::NavigateCompleteCoverage_Goal const>(*new_goal));
   return true;
 }
 

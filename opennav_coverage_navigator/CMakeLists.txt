@@ -13,6 +13,7 @@ find_package(nav_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(opennav_coverage_msgs REQUIRED)
 find_package(backported_bt_navigator REQUIRED)
+find_package(gridmap_to_polygon REQUIRED)
 
 # potentially replace with nav2_common, nav2_package()
 set(CMAKE_CXX_STANDARD 17)
@@ -34,6 +35,7 @@ set(dependencies
   geometry_msgs
   opennav_coverage_msgs
   backported_bt_navigator
+  gridmap_to_polygon
 )
 
 include_directories(
