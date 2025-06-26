@@ -19,8 +19,13 @@
         <!-- May use:
          'polygons="{field_polygon}" polygons_frame_id="{polygon_frame_id}"' if set polygon via NavigateCompleteCoverage
          or file_field="{field_filepath}" if setting polygon file via NavigateCompleteCoverage -->
-        <ComputeCoveragePath nav_path="{path}" polygons="{field_polygon}" polygons_frame_id="{polygon_frame_id}"/>
-        <FollowPath path="{path}" controller_id="FollowPath"/>
+        <ComputeCoveragePath nav_path="{coverage_path}" polygons="{field_polygon}" polygons_frame_id="{polygon_frame_id}"/>
+        <GetPoseFromPath path="{coverage_path}" pose="{start_pose}" />
+
+        <ComputePathToPose goal="{start_pose}" path="{start_path}" planner_id="GridBased"/>
+        <FollowPath path="{start_path}" controller_id="FollowPath"/>
+
+        <FollowPath path="{coverage_path}" controller_id="RegulatedPurePursuitController"/>
       </Sequence>
     </RateController>
   </BehaviorTree>
