@@ -13,6 +13,7 @@ find_package(nav_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(opennav_coverage_msgs REQUIRED)
 find_package(behaviortree_cpp_v3 REQUIRED)
+find_package(gridmap_to_polygon REQUIRED)
 
 # potentially replace with nav2_common, nav2_package()
 set(CMAKE_CXX_STANDARD 17)
@@ -34,12 +35,15 @@ set(dependencies
   geometry_msgs
   opennav_coverage_msgs
   behaviortree_cpp_v3
+  gridmap_to_polygon
 )
 
 add_library(opennav_compute_complete_coverage_action_bt_node SHARED src/compute_complete_coverage_path.cpp)
 list(APPEND plugin_libs opennav_compute_complete_coverage_action_bt_node)
 add_library(opennav_cancel_complete_coverage_action_bt_node SHARED src/cancel_complete_coverage_path.cpp)
 list(APPEND plugin_libs opennav_cancel_complete_coverage_action_bt_node)
+add_library(get_polygons_from_map_action_bt_node SHARED src/get_polygons_from_map.cpp)
+list(APPEND plugin_libs get_polygons_from_map_action_bt_node)
 
 foreach(bt_plugin ${plugin_libs})
   ament_target_dependencies(${bt_plugin} ${dependencies})
