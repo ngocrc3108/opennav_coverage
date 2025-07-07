@@ -15,6 +15,7 @@
   <BehaviorTree ID="MainTree">
     <RateController hz="0.0000001"> <!-- once, for demo -->
       <Sequence name="NavigateWithoutReplanning">
+        <ControlFanLevel level="0"/>
         <ConvertGridMapToPolygons polygons="{field_polygon}"/>
         <!-- May use:
          'polygons="{field_polygon}" polygons_frame_id="{polygon_frame_id}"' if set polygon via NavigateCompleteCoverage
@@ -25,7 +26,9 @@
         <ComputePathToPose goal="{start_pose}" path="{start_path}" planner_id="GridBased"/>
         <FollowPath path="{start_path}" controller_id="FollowPath"/>
 
+        <ControlFanLevel level="1" />
         <FollowPath path="{coverage_path}" controller_id="RegulatedPurePursuitController"/>
+        <ControlFanLevel level="0"/>
       </Sequence>
     </RateController>
   </BehaviorTree>
