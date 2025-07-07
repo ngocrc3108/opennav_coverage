@@ -44,6 +44,12 @@ add_library(opennav_cancel_complete_coverage_action_bt_node SHARED src/cancel_co
 list(APPEND plugin_libs opennav_cancel_complete_coverage_action_bt_node)
 add_library(convert_grid_map_to_polygons_action_bt_node SHARED src/convert_grid_map_to_polygons.cpp)
 list(APPEND plugin_libs convert_grid_map_to_polygons_action_bt_node)
+add_library(control_fan_level_action_bt_node SHARED src/control_fan_level.cpp)
+list(APPEND plugin_libs control_fan_level_action_bt_node)
+
+target_link_libraries(control_fan_level_action_bt_node
+  wiringPi
+)
 
 foreach(bt_plugin ${plugin_libs})
   ament_target_dependencies(${bt_plugin} ${dependencies})
