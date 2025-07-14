@@ -48,6 +48,7 @@ opennav_bt_navigator:
       - opennav_cancel_complete_coverage_action_bt_node
       - convert_grid_map_to_polygons_action_bt_node
       - control_fan_level_action_bt_node
+      - nav2_clear_costmap_service_bt_node
  
 controller_server:
   ros__parameters:
